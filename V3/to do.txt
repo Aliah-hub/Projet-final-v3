@@ -1,0 +1,74 @@
+V1 :
+1. (4212) manangana base de donnees
+   - [x] Creer la base emprunt_db 
+   - [x] Creer la table vmembre (id_membre, nom, date_naissance, genre, mail, ville, mdp, image_profil)
+   - [x] Creer la table vcategorie_objet (id_categorie, nom_categorie)
+   - [x] Creer la table vobjet (id_objet, nom_objet, id_categorie, id_membre)
+   - [x] Creer la table vimages_objet (id_image, id_objet, nom_image)
+   - [x] Creer la table vemprunt (id_emprunt, id_objet, id_membre, date_emprunt, date_retour)
+
+2. (4212)Inserer donnees de test 
+   - [x] Inserer 4 membres (Aliah, Aydane, Angela, Voahary) dans vmembre
+   - [x] Inserer 4 categories : Esthetique, Bricolage, Mecanique, Cuisine dans vcategorie_objet
+   - [x] Inserer 10 objets par membre (40 objets) repartis sur les categories dans vobjet
+   - [x] Inserer 10 emprunts avec dates dans vemprunt
+
+3. (4352)Creer les pages
+   - [x] Inscription (inscription.php)
+      - [x] Formulaire avec nom, email, mot de passe, date_naissance, genre, ville
+      - [x] Lien pour se connecter si dejà un compte
+   - [x] Login (login.php)
+      - [x] Formulaire avec mail, mot de passe
+      - [x] Bouton "Se connecter"
+      - [x] Lien pour s'inscrire si pas de compte
+   - [x] Liste Objets (liste_objets.php)
+      - [x] Afficher tous les objets dans un tableau
+      - [x] Afficher date_retour si objet emprunte
+      - [x] Filtre par categorie via dropdown
+
+4. Creer includes
+ (4352)  - [x] connexion (connexion.php): Connexion à la base de donnees
+ (4212) - [x] deconnexion (deconnexion.php): Deconnexion avec destruction de session
+ (4352/(4212))  - [x] fonction (fonctions.php)
+      - [x] inscrire_membre: Enregistrer un nouveau membre
+      - [x] connecter_membre: Authentifier un membre
+      - [x] lister_categories: Lister toutes les categories
+      - [x] lister_objets: Lister les objets avec filtre par categorie
+
+
+V2 :
+Ajout d’un objet avec upload d’images:
+-Vérifier que ajouter_objet.php permet l'upload de plusieurs images (JPEG/PNG, max 2 Mo).
+-Confirmer que la premiere image uploadee est definie comme image_principale dans vobjet.
+-Enregistrer les autres images dans vimages_objet.
+-Utiliser l'image par defaut
+
+Suppression des images:
+-Verifier que fiche_objet.php affiche des boutons "Supprimer" pour l'image principale 
+-Confirmer que la suppression d'une image principale met à jour vobjet.image_principale à default.png.
+-Verifier que la suppression d'une image supplementaire supprime l'entree de vimages_objet et le fichier du dossier Uploads/images/.
+
+Affichage de la fiche de l’objet:
+-Confirmer que fiche_objet.php affiche l'image principale (vobjet.image_principale) et les images supplémentaires (vimages_objet).
+-Vérifier l'affichage de l'historique des emprunts (tableau avec date_emprunt, date_retour, emprunteur depuis vemprunt).
+
+liste_objets.php:
+-Ajouter un formulaire de recherche avec :
+-Une liste déroulante (<select>) pour filtrer par catégorie (utiliser lister_categories).
+-Un champ texte pour rechercher par nom d'objet (recherche partielle sur nom_objet).
+-Une case à cocher pour filtrer les objets disponibles (ceux sans date_retour valide dans vemprunt).
+
+Modifier la fonction lister_objets dans fonctions.php 
+
+Fiche membre avec infos et objets regroupes:
+-Confirmer que fiche_membre.php affiche les informations du membre (nom, mail, telephone).
+-Verifier que la fonction lister_objets_membre dans fonctions.php regroupe les objets par nom_categorie.
+-Confirmer l'affichage des objets dans des tables par catégorie avec colonnes "Image", "Objet", "Action" (lien vers fiche_objet.php).
+
+
+V3 :
+PART1-(4352)
+liste_objets :
+- ajouter un bouton emprunter avec un petit liste deroulante de nombre de jours
+fonctions.php :
+ 
