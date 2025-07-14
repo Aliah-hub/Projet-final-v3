@@ -37,33 +37,32 @@ V1 :
 
 
 V2 :
-Ajout d’un objet avec upload d’images:
--Vérifier que ajouter_objet.php permet l'upload de plusieurs images (JPEG/PNG, max 2 Mo).
--Confirmer que la premiere image uploadee est definie comme image_principale dans vobjet.
+(4352)Ajout d’un objet avec upload d’images:
+-Verifier que ajouter_objet.php permet l'upload de plusieurs images (JPEG/PNG, max 2 Mo)
+-Confirmer que la premiere image uploadee est definie comme image_principale dans vobjet
 -Enregistrer les autres images dans vimages_objet.
 -Utiliser l'image par defaut
 
-Suppression des images:
+(4212)Suppression des images:
 -Verifier que fiche_objet.php affiche des boutons "Supprimer" pour l'image principale 
 -Confirmer que la suppression d'une image principale met à jour vobjet.image_principale à default.png.
 -Verifier que la suppression d'une image supplementaire supprime l'entree de vimages_objet et le fichier du dossier Uploads/images/.
 
 Affichage de la fiche de l’objet:
--Confirmer que fiche_objet.php affiche l'image principale (vobjet.image_principale) et les images supplémentaires (vimages_objet).
--Vérifier l'affichage de l'historique des emprunts (tableau avec date_emprunt, date_retour, emprunteur depuis vemprunt).
+-Confirmer que fiche_objet.php affiche l'image principale (vobjet.image_principale) et les images supplementaires (vimages_objet).
+-Verifier l'affichage de l'historique des emprunts (tableau avec date_emprunt, date_retour, emprunteur depuis vemprunt).
 
 liste_objets.php:
 -Ajouter un formulaire de recherche avec :
--Une liste déroulante (<select>) pour filtrer par catégorie (utiliser lister_categories).
--Un champ texte pour rechercher par nom d'objet (recherche partielle sur nom_objet).
+-Une liste deroulante  pour filtrer par categorie ( lister_categories)
+-Un champ texte pour rechercher par nom d'objet (recherche partielle sur nom_objet)
 -Une case à cocher pour filtrer les objets disponibles (ceux sans date_retour valide dans vemprunt).
 
-Modifier la fonction lister_objets dans fonctions.php 
-
+fonctions.php :
 Fiche membre avec infos et objets regroupes:
 -Confirmer que fiche_membre.php affiche les informations du membre (nom, mail, telephone).
 -Verifier que la fonction lister_objets_membre dans fonctions.php regroupe les objets par nom_categorie.
--Confirmer l'affichage des objets dans des tables par catégorie avec colonnes "Image", "Objet", "Action" (lien vers fiche_objet.php).
+-Confirmer l'affichage des objets dans des tables par categorie avec colonnes "Image", "Objet", "Action" (lien vers fiche_objet.php).
 
 
 V3 :
@@ -71,4 +70,19 @@ PART1-(4352)
 liste_objets :
 - ajouter un bouton emprunter avec un petit liste deroulante de nombre de jours
 fonctions.php :
- 
+ -emprunter_objet
+
+PART2:(4212)
+ fiche_membre:
+ -ajouter tous les listes des objets emprunts :
+      *manampy TABLE SQL : vretour
+ -bouton retour pour faire retourner les objets emprunter
+ -champ ok ou abimer apparait lorsqu on clique sur RETOUR:
+      *liste deroulante
+      *un bouton CONFIRMER pour confirmer
+ -nouvelle page pour lister des objets ok et abimer (juste nombre):
+   *liste_retours.php
+-FONCTIONS.PHP:
+   *lister_retours : 
+
+   

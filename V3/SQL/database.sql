@@ -100,3 +100,13 @@ INSERT INTO vemprunt (id_emprunt, id_objet, id_membre, date_emprunt, date_retour
 (10, 40, 1, '2025-07-10', '2025-07-24');
 
 ALTER TABLE vobjet ADD image_principale VARCHAR(255) DEFAULT '../Uploads/images/default.jpg';
+
+CREATE TABLE vretour (
+    id_retour INT AUTO_INCREMENT PRIMARY KEY,
+    id_objet INT NOT NULL,
+    id_membre INT NOT NULL,
+    date_retour DATE NOT NULL,
+    etat VARCHAR(10) NOT NULL,
+    FOREIGN KEY (id_objet) REFERENCES vobjet(id_objet),
+    FOREIGN KEY (id_membre) REFERENCES vmembre(id_membre)
+);

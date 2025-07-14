@@ -17,7 +17,7 @@ if (isset($_POST['emprunter_objet'])) {
     $id_membre = $_SESSION['id_membre'];
     
     if (!is_numeric($duree_jours) || $duree_jours <= 0) {
-        $erreur_emprunt = "Erreur : La durée doit être un nombre positif.";
+        $erreur_emprunt = "Erreur : La duree doit etre un nombre positif.";
     } else {
         $resultat = emprunter_objet($id_objet, $id_membre, $duree_jours);
         if ($resultat !== true) {
@@ -47,12 +47,13 @@ $objets = lister_objets($categorie_id, $nom_objet, $disponible);
         <div class="mb-3">
             <a href="fiche_membre.php" class="btn btn-primary">Mon profil</a>
             <a href="ajouter_objet.php" class="btn btn-success">Ajouter un objet</a>
-            <a href="login.php" class="btn btn-danger">Se déconnecter</a>
+            <a href="liste_retours.php" class="btn btn-info">Retours</a>
+            <a href="login.php" class="btn btn-danger">Se deconnecter</a>
         </div>
         <form method="GET" action="">
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <label class="form-label">Filtrer par catégorie :</label>
+                    <label class="form-label">Filtrer par categorie :</label>
                     <select name="categorie" class="form-select">
                         <option value="">Toutes</option>
                         <?php
@@ -74,21 +75,21 @@ $objets = lister_objets($categorie_id, $nom_objet, $disponible);
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Filtrer</button>
-            <a href="liste_objets.php" class="btn btn-secondary">Réinitialiser</a>
+            <a href="liste_objets.php" class="btn btn-secondary">Reinitialiser</a>
         </form>
         <?php if ($erreur_emprunt) { ?>
             <div class="alert alert-danger"><?php echo htmlspecialchars($erreur_emprunt); ?></div>
         <?php } ?>
         <?php if (empty($objets)) { ?>
-            <p class="alert alert-info">Aucun objet trouvé.</p>
+            <p class="alert alert-info">Aucun objet trouve.</p>
         <?php } else { ?>
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Image</th>
                         <th>Objet</th>
-                        <th>Catégorie</th>
-                        <th>Propriétaire</th>
+                        <th>Categorie</th>
+                        <th>Proprietaire</th>
                         <th>Statut</th>
                         <th>Action</th>
                     </tr>
@@ -100,7 +101,7 @@ $objets = lister_objets($categorie_id, $nom_objet, $disponible);
                             <td><?php echo htmlspecialchars($objet['nom_objet']); ?></td>
                             <td><?php echo htmlspecialchars($objet['nom_categorie']); ?></td>
                             <td><?php echo htmlspecialchars($objet['proprietaire']); ?></td>
-                            <td><?php echo $objet['date_retour'] ? "Emprunté (retour le {$objet['date_retour']})" : "Disponible"; ?></td>
+                            <td><?php echo $objet['date_retour'] ? "Emprunte (retour le {$objet['date_retour']})" : "Disponible"; ?></td>
                             <td>
                                 <a href="fiche_objet.php?id=<?php echo htmlspecialchars($objet['id_objet']); ?>" class="btn btn-primary btn-sm">🔍</a>
                                 <?php if (!$objet['date_retour'] && $objet['proprietaire_id'] != $_SESSION['id_membre']) { ?>

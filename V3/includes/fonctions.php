@@ -4,14 +4,14 @@ require_once 'connexion.php';
 function inscrire_membre($nom, $date_naissance, $genre, $mail, $ville, $mdp, $image_profil = '../Uploads/images/default_profile.png') {
     global $bdd;
     if (!$bdd) {
-        echo 'Erreur : Connexion à la base de données non établie.';
+        echo 'Erreur : Connexion a la base de donnees non etablie.';
         return false;
     }
     $mail = mysqli_real_escape_string($bdd, $mail);
     $requete_verif = "SELECT * FROM vmembre WHERE mail = '$mail'";
     $resultat_verif = mysqli_query($bdd, $requete_verif);
     if (mysqli_num_rows($resultat_verif) > 0) {
-        echo "Erreur : Ce mail est déjà utilisé.";
+        echo "Erreur : Ce mail est deja utilise.";
         return false;
     }
 
@@ -35,7 +35,7 @@ function inscrire_membre($nom, $date_naissance, $genre, $mail, $ville, $mdp, $im
 function connecter_membre($mail, $mdp) {
     global $bdd;
     if (!$bdd) {
-        echo 'Erreur : Connexion à la base de données non établie.';
+        echo 'Erreur : Connexion a la base de donnees non etablie.';
         return false;
     }
     $mail = mysqli_real_escape_string($bdd, $mail);
@@ -56,7 +56,7 @@ function connecter_membre($mail, $mdp) {
 function lister_categories() {
     global $bdd;
     if (!$bdd) {
-        echo 'Erreur : Connexion à la base de données non établie.';
+        echo 'Erreur : Connexion a la base de donnees non etablie.';
         return [];
     }
     $requete = "SELECT * FROM vcategorie_objet";
@@ -71,7 +71,7 @@ function lister_categories() {
 function lister_objets($categorie_id, $nom_objet = '', $disponible = false) {
     global $bdd;
     if (!$bdd) {
-        echo 'Erreur : Connexion à la base de données non établie.';
+        echo 'Erreur : Connexion a la base de donnees non etablie.';
         return [];
     }
     $requete = "SELECT 
@@ -117,8 +117,8 @@ function lister_objets($categorie_id, $nom_objet = '', $disponible = false) {
 function obtenir_profil_et_objets($id_membre) {
     global $bdd;
     if (!$bdd) {
-        echo 'Erreur : Connexion à la base de données non établie.';
-        return ['membre' => null, 'objets' => []];
+        echo 'Erreur : Connexion a la base de donnees non etablie.';
+        return ['membre' => null, 'objets' => [], 'emprunts' => []];
     }
     
     $id_membre = mysqli_real_escape_string($bdd, $id_membre);
@@ -126,12 +126,12 @@ function obtenir_profil_et_objets($id_membre) {
     $resultat_membre = mysqli_query($bdd, $requete_membre);
     if (!$resultat_membre) {
         echo 'Erreur SQL : ' . mysqli_error($bdd);
-        return ['membre' => null, 'objets' => []];
+        return ['membre' => null, 'objets' => [], 'emprunts' => []];
     }
     $membre = mysqli_fetch_assoc($resultat_membre);
     
     if (!$membre) {
-        return ['membre' => null, 'objets' => []];
+        return ['membre' => null, 'objets' => [], 'emprunts' => []];
     }
 
     $requete_objets = "SELECT 
@@ -146,22 +146,43 @@ function obtenir_profil_et_objets($id_membre) {
     $resultat_objets = mysqli_query($bdd, $requete_objets);
     if (!$resultat_objets) {
         echo 'Erreur SQL : ' . mysqli_error($bdd);
-        return ['membre' => $membre, 'objets' => []];
+        return ['membre' => $membre, 'objets' => [], 'emprunts' => []];
     }
     
     $objets = [];
     while ($row = mysqli_fetch_assoc($resultat_objets)) {
         $objets[$row['nom_categorie']][] = $row;
     }
+
+    $requete_emprunts = "SELECT 
+                            o.id_objet,
+                            o.nom_objet,
+                            c.nom_categorie,
+                            e.date_retour
+                         FROM vemprunt e
+                         JOIN vobjet o ON e.id_objet = o.id_objet
+                         JOIN vcategorie_objet c ON o.id_categorie = c.id_categorie
+                         WHERE e.id_membre = '$id_membre' AND e.date_retour >= CURDATE()
+                         ORDER BY e.date_retour";
+    $resultat_emprunts = mysqli_query($bdd, $requete_emprunts);
+    if (!$resultat_emprunts) {
+        echo 'Erreur SQL : ' . mysqli_error($bdd);
+        return ['membre' => $membre, 'objets' => $objets, 'emprunts' => []];
+    }
     
-    return ['membre' => $membre, 'objets' => $objets];
+    $emprunts = [];
+    while ($row = mysqli_fetch_assoc($resultat_emprunts)) {
+        $emprunts[] = $row;
+    }
+    
+    return ['membre' => $membre, 'objets' => $objets, 'emprunts' => $emprunts];
 }
 
 function emprunter_objet($id_objet, $id_membre, $duree_jours) {
     global $bdd;
     if (!$bdd) {
-        echo 'Erreur : Connexion à la base de données non établie.';
-        return 'Erreur : Connexion à la base de données non établie.';
+        echo 'Erreur : Connexion a la base de donnees non etablie.';
+        return 'Erreur : Connexion a la base de donnees non etablie.';
     }
     $id_objet = mysqli_real_escape_string($bdd, $id_objet);
     $id_membre = mysqli_real_escape_string($bdd, $id_membre);
@@ -175,11 +196,11 @@ function emprunter_objet($id_objet, $id_membre, $duree_jours) {
         return 'Erreur SQL : ' . mysqli_error($bdd);
     }
     if (mysqli_num_rows($resultat_check) > 0) {
-        return "Erreur : Cet objet est déjà emprunté.";
+        return "Erreur : Cet objet est deja emprunte.";
     }
 
-    $date_emprunt = date('Y-m-d'); 
-    $date_retour = date('Y-m-d', strtotime("+$duree_jours days")); 
+    $date_emprunt = date('Y-m-d');
+    $date_retour = date('Y-m-d', strtotime("+$duree_jours days"));
 
     $requete = "INSERT INTO vemprunt (id_objet, id_membre, date_emprunt, date_retour) 
                 VALUES ('$id_objet', '$id_membre', '$date_emprunt', '$date_retour')";
@@ -188,5 +209,63 @@ function emprunter_objet($id_objet, $id_membre, $duree_jours) {
         return 'Erreur SQL : ' . mysqli_error($bdd);
     }
     return true;
+}
+
+function retourner_objet($id_objet, $id_membre, $etat) {
+    global $bdd;
+    if (!$bdd) {
+        echo 'Erreur : Connexion a la base de donnees non etablie.';
+        return 'Erreur : Connexion a la base de donnees non etablie.';
+    }
+    $id_objet = mysqli_real_escape_string($bdd, $id_objet);
+    $id_membre = mysqli_real_escape_string($bdd, $id_membre);
+    $etat = mysqli_real_escape_string($bdd, $etat);
+    
+    if ($etat != 'OK' && $etat != 'Abime') {
+        return "Erreur : Etat invalide.";
+    }
+
+    $date_retour = date('Y-m-d');
+    $requete = "INSERT INTO vretour (id_objet, id_membre, date_retour, etat) 
+                VALUES ('$id_objet', '$id_membre', '$date_retour', '$etat')";
+    $resultat = mysqli_query($bdd, $requete);
+    if (!$resultat) {
+        return 'Erreur SQL : ' . mysqli_error($bdd);
+    }
+
+    $requete_delete = "DELETE FROM vemprunt 
+                       WHERE id_objet = '$id_objet' AND id_membre = '$id_membre' AND date_retour >= CURDATE()";
+    $resultat_delete = mysqli_query($bdd, $requete_delete);
+    if (!$resultat_delete) {
+        return 'Erreur SQL : ' . mysqli_error($bdd);
+    }
+
+    return true;
+}
+
+function lister_retours() {
+    global $bdd;
+    if (!$bdd) {
+        echo 'Erreur : Connexion a la base de donnees non etablie.';
+        return ['ok' => 0, 'abime' => 0];
+    }
+    $requete = "SELECT etat, COUNT(*) as nombre 
+                FROM vretour 
+                GROUP BY etat";
+    $resultat = mysqli_query($bdd, $requete);
+    if (!$resultat) {
+        echo 'Erreur SQL : ' . mysqli_error($bdd);
+        return ['ok' => 0, 'abime' => 0];
+    }
+    
+    $retours = ['ok' => 0, 'abime' => 0];
+    while ($row = mysqli_fetch_assoc($resultat)) {
+        if ($row['etat'] == 'OK') {
+            $retours['ok'] = $row['nombre'];
+        } elseif ($row['etat'] == 'Abime') {
+            $retours['abime'] = $row['nombre'];
+        }
+    }
+    return $retours;
 }
 ?>
